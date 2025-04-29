@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  customer-service:
+    build:
+      context: .
+      dockerfile: customer/Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - events-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8081"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  tickets-service:
+    build:
+      context: .
+      dockerfile: tickets/Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - events-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8082"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  orchestrator-worker:
+    build:
+      context: .
+      dockerfile: orchestrator/Dockerfile
+    ports:
+      - "8086:8086"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - events-network
+    depends_on:
+      - customer-service
+      - tickets-service
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8086"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  events-network:
+    driver: bridge
