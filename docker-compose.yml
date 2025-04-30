@@ -1,60 +1,122 @@
 version: '3.8'
 
 services:
-  customer-service:
-    build:
-      context: .
-      dockerfile: customer/Dockerfile
-    ports:
-      - "8081:8081"
+  postgresql:
+    image: postgres:16.2
+    container_name: my-postgres
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Senh4Turm4#1
+    ports:
+      - "5432:5432"
     networks:
-      - events-network
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8081"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+      - backend
+    restart: unless-stopped
 
-  tickets-service:
-    build:
-      context: .
-      dockerfile: tickets/Dockerfile
-    ports:
-      - "8082:8082"
+  pgadmin:
+    image: dpage/pgadmin4:9.1.0
+    container_name: my-pg-admin
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    networks:
-      - events-network
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8082"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-
-  orchestrator-worker:
-    build:
-      context: .
-      dockerfile: orchestrator/Dockerfile
+      PGADMIN_DEFAULT_EMAIL: messias.b@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: Senh4Turm4#1
     ports:
-      - "8086:8086"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
+      - "7000:8080"
     networks:
-      - events-network
+      - backend
     depends_on:
-      - customer-service
-      - tickets-service
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8086"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+      - postgresql
+    restart: unless-stopped
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.1.4
+    container_name: my-keycloak
+    command: start-dev --features authorization,organization
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: Senh4Turm4#1
+    ports:
+      - "7001:8080"
+    networks:
+      - backend
+    restart: unless-stopped
+
+  sonarqube:
+    image: sonarqube:lts-community
+    container_name: my-sonarqube
+    ports:
+      - "7002:9000"
+    networks:
+      - backend
+    restart: unless-stopped
+
+  jenkins:
+    image: jenkins/jenkins:lts-jdk17
+    container_name: my-jenkins
+    ports:
+      - "7003:8080"
+      - "7004:5000"
+    networks:
+      - backend
+    restart: unless-stopped
+
+#  customer-service:
+#    build:
+#      context: .
+#      dockerfile: customer/Dockerfile
+#    ports:
+#      - "8081:8081"
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    networks:
+#      - backend
+#    depends_on:
+#      - postgresql
+#    healthcheck:
+#      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8081"]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 3
+#      start_period: 40s
+#
+#  tickets-service:
+#    build:
+#      context: .
+#      dockerfile: tickets/Dockerfile
+#    ports:
+#      - "8082:8082"
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    networks:
+#      - backend
+#    depends_on:
+#      - postgresql
+#    healthcheck:
+#      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8082"]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 3
+#      start_period: 40s
+#
+#  orchestrator-worker:
+#    build:
+#      context: .
+#      dockerfile: orchestrator/Dockerfile
+#    ports:
+#      - "8086:8086"
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    networks:
+#      - backend
+#    depends_on:
+#      - customer-service
+#      - tickets-service
+#    healthcheck:
+#      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8086"]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 3
+#      start_period: 40s
 
 networks:
-  events-network:
+  backend:
     driver: bridge
