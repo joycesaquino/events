@@ -1,9 +1,9 @@
 package com.events.customer.mapper;
 
+import com.events.commons.entity.Customer;
 import com.events.customer.dto.CustomerCreateDTO;
 import com.events.customer.dto.CustomerDTO;
 import com.events.customer.dto.CustomerUpdateDTO;
-import com.events.customer.entity.Customer;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -74,8 +74,8 @@ public class CustomerMapper {
             return null;
         }
         return customers.stream()
-                .map(customerToDtoMapper)
-                .collect(Collectors.toList());
+            .map(customerToDtoMapper)
+            .collect(Collectors.toList());
     }
 
     /**

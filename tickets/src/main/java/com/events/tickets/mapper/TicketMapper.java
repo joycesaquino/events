@@ -2,7 +2,7 @@ package com.events.tickets.mapper;
 
 import com.events.tickets.dto.TicketDTO;
 import com.events.tickets.dto.TicketUpdateDTO;
-import com.events.tickets.entity.Ticket;
+import com.events.commons.entity.Ticket;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;

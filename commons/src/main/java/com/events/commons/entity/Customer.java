@@ -1,6 +1,6 @@
-package com.events.customer.entity;
+package com.events.commons.entity;
 
-import com.events.customer.enums.CustomerStatus;
+import com.events.commons.enums.CustomerStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

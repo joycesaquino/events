@@ -1,4 +1,4 @@
-package com.events.customer.enums;
+package com.events.commons.enums;
 
 /**
  * Enum representing the possible status values for a customer.

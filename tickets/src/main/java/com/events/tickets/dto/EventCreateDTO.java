@@ -1,8 +1,9 @@
 package com.events.tickets.dto;
 
-import com.events.tickets.enums.EventStatus;
+import com.events.commons.enums.EventStatus;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,4 +22,7 @@ public class EventCreateDTO {
 
     @NotNull
     private Long tickets;
+
+    @NotNull
+    private BigDecimal price;
 }

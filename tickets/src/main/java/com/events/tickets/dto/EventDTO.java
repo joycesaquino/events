@@ -1,6 +1,6 @@
 package com.events.tickets.dto;
 
-import com.events.tickets.enums.EventStatus;
+import com.events.commons.enums.EventStatus;
 import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;

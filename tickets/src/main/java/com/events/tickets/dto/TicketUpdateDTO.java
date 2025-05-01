@@ -1,6 +1,6 @@
 package com.events.tickets.dto;
 
-import com.events.tickets.enums.TicketStatus;
+import com.events.commons.enums.TicketStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

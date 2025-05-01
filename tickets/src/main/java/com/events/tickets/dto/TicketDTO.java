@@ -1,6 +1,6 @@
 package com.events.tickets.dto;
 
-import com.events.tickets.enums.TicketStatus;
+import com.events.commons.enums.TicketStatus;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.time.OffsetDateTime;

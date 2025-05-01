@@ -1,6 +1,6 @@
 package com.events.customer.repository;
 
-import com.events.customer.entity.Customer;
+import com.events.commons.entity.Customer;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

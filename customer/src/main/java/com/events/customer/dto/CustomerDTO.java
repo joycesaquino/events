@@ -1,6 +1,6 @@
 package com.events.customer.dto;
 
-import com.events.customer.enums.CustomerStatus;
+import com.events.commons.enums.CustomerStatus;
 import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;

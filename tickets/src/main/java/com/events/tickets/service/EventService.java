@@ -1,11 +1,10 @@
 package com.events.tickets.service;
 
+import com.events.commons.entity.Event;
+import com.events.commons.entity.Ticket;
 import com.events.tickets.dto.EventCreateDTO;
 import com.events.tickets.dto.EventDTO;
 import com.events.tickets.dto.EventUpdateDTO;
-import com.events.tickets.entity.Event;
-import com.events.tickets.entity.Ticket;
-import com.events.tickets.enums.TicketStatus;
 import com.events.tickets.mapper.EventMapper;
 import com.events.tickets.repository.EventRepository;
 import java.util.ArrayList;
@@ -60,7 +59,7 @@ public class EventService {
         List<Ticket> tickets = new ArrayList<>();
         Event event = eventRepository.save(eventMapper.toEntity(dto));
         for (int i = 0; i < dto.getTickets(); i++) {
-            tickets.add(ticketService.create(event));
+            tickets.add(ticketService.create(event, dto.getPrice()));
         }
         return eventMapper.toDTO(event);
     }

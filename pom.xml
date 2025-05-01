@@ -32,7 +32,7 @@
   <modules>
     <module>customer</module>
     <module>tickets</module>
-    <module>orchestrator</module>
+    <module>commons</module>
   </modules>
 
   <properties>

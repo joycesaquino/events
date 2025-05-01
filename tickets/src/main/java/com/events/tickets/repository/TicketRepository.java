@@ -1,6 +1,6 @@
 package com.events.tickets.repository;
 
-import com.events.tickets.entity.Ticket;
+import com.events.commons.entity.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

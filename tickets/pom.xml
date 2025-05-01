@@ -55,11 +55,16 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com</groupId>-->
+<!--      <artifactId>customer</artifactId>-->
+<!--      <version>0.0.1-SNAPSHOT</version>-->
+<!--      <scope>compile</scope>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>com</groupId>
-      <artifactId>customer</artifactId>
+      <artifactId>commons</artifactId>
       <version>0.0.1-SNAPSHOT</version>
-      <scope>compile</scope>
     </dependency>
   </dependencies>
   <build>

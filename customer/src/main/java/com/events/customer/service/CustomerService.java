@@ -1,9 +1,9 @@
 package com.events.customer.service;
 
+import com.events.commons.entity.Customer;
 import com.events.customer.dto.CustomerCreateDTO;
 import com.events.customer.dto.CustomerDTO;
 import com.events.customer.dto.CustomerUpdateDTO;
-import com.events.customer.entity.Customer;
 import com.events.customer.mapper.CustomerMapper;
 import com.events.customer.repository.CustomerRepository;
 import java.util.List;
@@ -42,7 +42,7 @@ public class CustomerService {
     @Transactional(readOnly = true)
     public Optional<CustomerDTO> getCustomerById(Long id) {
         return customerRepository.findById(id)
-                .map(customerMapper::toDTO);
+            .map(customerMapper::toDTO);
     }
 
     /**
@@ -54,7 +54,7 @@ public class CustomerService {
     @Transactional(readOnly = true)
     public Optional<CustomerDTO> getCustomerByEmail(String email) {
         return customerRepository.findByEmail(email)
-                .map(customerMapper::toDTO);
+            .map(customerMapper::toDTO);
     }
 
     /**
@@ -80,10 +80,10 @@ public class CustomerService {
     @Transactional
     public Optional<CustomerDTO> updateCustomer(Long id, CustomerUpdateDTO customerUpdateDTO) {
         return customerRepository.findById(id)
-                .map(existingCustomer -> {
-                    Customer updatedCustomer = customerMapper.updateCustomerFromDTO(customerUpdateDTO, existingCustomer);
-                    return customerMapper.toDTO(customerRepository.save(updatedCustomer));
-                });
+            .map(existingCustomer -> {
+                Customer updatedCustomer = customerMapper.updateCustomerFromDTO(customerUpdateDTO, existingCustomer);
+                return customerMapper.toDTO(customerRepository.save(updatedCustomer));
+            });
     }
 
     /**

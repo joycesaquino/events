@@ -1,13 +1,14 @@
 package com.events.tickets.service;
 
-import com.events.customer.entity.Customer;
+import com.events.commons.entity.Customer;
+import com.events.commons.entity.Event;
+import com.events.commons.entity.Ticket;
 import com.events.tickets.dto.TicketDTO;
 import com.events.tickets.dto.TicketUpdateDTO;
-import com.events.tickets.entity.Event;
-import com.events.tickets.entity.Ticket;
-import com.events.tickets.enums.TicketStatus;
+import com.events.commons.enums.TicketStatus;
 import com.events.tickets.mapper.TicketMapper;
 import com.events.tickets.repository.TicketRepository;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +59,7 @@ public class TicketService {
         Ticket ticket = ticketMapper.toEntity(dto);
         Customer customer = new Customer();
         customer.setId(dto.getCustomerId());
-//        ticket.setCustomer(customer);
+        ticket.setCustomer(customer);
 
         ticket.setStatus(TicketStatus.RESERVED);
 
@@ -70,10 +71,11 @@ public class TicketService {
      *
      * @return the created ticket
      */
-    public Ticket create(Event event) {
+    public Ticket create(Event event, BigDecimal price) {
         Ticket ticket = new Ticket();
         ticket.setEvent(event);
-        ticket.setStatus(TicketStatus.RESERVED);
+        ticket.setStatus(TicketStatus.AVAILABLE);
+        ticket.setPrice(price);
         return ticketRepository.save(ticket);
     }
 
