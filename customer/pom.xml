@@ -60,6 +60,7 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
           <mainClass>com.events.customer.CustomerApplication</mainClass>
+          <classifier>exec</classifier>
         </configuration>
       </plugin>
     </plugins>

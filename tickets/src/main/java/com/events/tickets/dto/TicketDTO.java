@@ -1,6 +1,8 @@
 package com.events.tickets.dto;
 
 import com.events.tickets.enums.TicketStatus;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,8 +17,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TicketDTO {
     private Long id;
+
+    @NotNull
+    @NotEmpty
     private Long customerId;
     private TicketStatus status;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
+
 }

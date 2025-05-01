@@ -1,7 +1,8 @@
 package com.events.tickets.dto;
 
 import com.events.tickets.enums.EventStatus;
-import java.util.List;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventCreateDTO {
+
+    @NotNull
     private EventStatus status;
-    private List<Long> ticketIds;
+
+    @NotNull
+    private Long tickets;
 }

@@ -4,11 +4,13 @@ package com.events.tickets.entity;
 import com.events.tickets.enums.EventStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -30,7 +32,7 @@ public class Event {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Enumerated
+  @Enumerated(EnumType.STRING)
   private EventStatus status;
 
   @Column(name = "created_at")
@@ -38,10 +40,6 @@ public class Event {
 
   @Column(name = "updated_at")
   private OffsetDateTime updatedAt;
-
-  @Column(name = "tickets")
-  @OneToMany (fetch = FetchType.LAZY)
-  List<Ticket> tickets;
 
   @PrePersist
   protected void onCreate() {

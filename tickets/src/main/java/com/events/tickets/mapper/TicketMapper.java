@@ -1,6 +1,5 @@
 package com.events.tickets.mapper;
 
-import com.events.tickets.dto.TicketCreateDTO;
 import com.events.tickets.dto.TicketDTO;
 import com.events.tickets.dto.TicketUpdateDTO;
 import com.events.tickets.entity.Ticket;
@@ -26,7 +25,7 @@ public class TicketMapper {
 
         TicketDTO dto = new TicketDTO();
         dto.setId(ticket.getId());
-        dto.setCustomerId(ticket.getCustomer() != null ? ticket.getCustomer().getId() : null);
+//        dto.setCustomerId(ticket.getCustomer() != null ? ticket.getCustomer().getId() : null);
         dto.setStatus(ticket.getStatus());
         dto.setCreatedAt(ticket.getCreatedAt());
         dto.setUpdatedAt(ticket.getUpdatedAt());
@@ -54,24 +53,24 @@ public class TicketMapper {
             return null;
         }
         return tickets.stream()
-                .map(ticketToDtoMapper)
-                .collect(Collectors.toList());
+            .map(ticketToDtoMapper)
+            .collect(Collectors.toList());
     }
 
     /**
      * Convert TicketCreateDTO to Ticket entity.
      * Note: This method does not set the Customer entity, it should be set separately.
      *
-     * @param ticketCreateDTO the ticket create DTO
+     * @param ticketUpdateDTO the ticket create DTO
      * @return the ticket entity
      */
-    public Ticket toEntity(TicketCreateDTO ticketCreateDTO) {
-        if (ticketCreateDTO == null) {
+    public Ticket toEntity(TicketUpdateDTO ticketUpdateDTO) {
+        if (ticketUpdateDTO == null) {
             return null;
         }
 
         Ticket ticket = new Ticket();
-        ticket.setStatus(ticketCreateDTO.getStatus());
+        ticket.setStatus(ticketUpdateDTO.getStatus());
         return ticket;
     }
 

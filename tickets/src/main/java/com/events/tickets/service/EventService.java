@@ -5,13 +5,12 @@ import com.events.tickets.dto.EventDTO;
 import com.events.tickets.dto.EventUpdateDTO;
 import com.events.tickets.entity.Event;
 import com.events.tickets.entity.Ticket;
+import com.events.tickets.enums.TicketStatus;
 import com.events.tickets.mapper.EventMapper;
 import com.events.tickets.repository.EventRepository;
-import com.events.tickets.repository.TicketRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class EventService {
 
     private final EventRepository eventRepository;
-    private final TicketRepository ticketRepository;
     private final EventMapper eventMapper;
+    private final TicketService ticketService;
 
     /**
      * Get all events.
@@ -47,26 +46,23 @@ public class EventService {
     @Transactional(readOnly = true)
     public Optional<EventDTO> getEventById(Long id) {
         return eventRepository.findById(id)
-                .map(eventMapper::toDTO);
+            .map(eventMapper::toDTO);
     }
 
     /**
      * Create a new event.
      *
-     * @param eventCreateDTO the event data to create
+     * @param dto the event data to create
      * @return the created event as DTO
      */
     @Transactional
-    public EventDTO createEvent(EventCreateDTO eventCreateDTO) {
-        Event event = eventMapper.toEntity(eventCreateDTO);
-        
-        if (eventCreateDTO.getTicketIds() != null && !eventCreateDTO.getTicketIds().isEmpty()) {
-            List<Ticket> tickets = ticketRepository.findAllById(eventCreateDTO.getTicketIds());
-            event.setTickets(tickets);
+    public EventDTO createEvent(EventCreateDTO dto) {
+        List<Ticket> tickets = new ArrayList<>();
+        Event event = eventRepository.save(eventMapper.toEntity(dto));
+        for (int i = 0; i < dto.getTickets(); i++) {
+            tickets.add(ticketService.create(event));
         }
-        
-        Event savedEvent = eventRepository.save(event);
-        return eventMapper.toDTO(savedEvent);
+        return eventMapper.toDTO(event);
     }
 
     /**
@@ -79,15 +75,10 @@ public class EventService {
     @Transactional
     public Optional<EventDTO> updateEvent(Long id, EventUpdateDTO eventUpdateDTO) {
         return eventRepository.findById(id)
-                .map(existingEvent -> {
-                    if (eventUpdateDTO.getTicketIds() != null) {
-                        List<Ticket> tickets = ticketRepository.findAllById(eventUpdateDTO.getTicketIds());
-                        existingEvent.setTickets(tickets);
-                    }
-                    
-                    Event updatedEvent = eventMapper.updateEventFromDTO(eventUpdateDTO, existingEvent);
-                    return eventMapper.toDTO(eventRepository.save(updatedEvent));
-                });
+            .map(existingEvent -> {
+                Event updatedEvent = eventMapper.updateEventFromDTO(eventUpdateDTO, existingEvent);
+                return eventMapper.toDTO(eventRepository.save(updatedEvent));
+            });
     }
 
     /**

@@ -5,17 +5,21 @@ import com.events.customer.entity.Customer;
 import com.events.tickets.enums.TicketStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -24,17 +28,22 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Ticket {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @JoinColumn(name = "customer_id")
+  @JoinColumn(name = "customer_id", nullable = true)
   @OneToOne
   private Customer customer;
 
-  @Enumerated
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "event_id")
+  private Event event;
+
+  @Enumerated(EnumType.STRING)
   private TicketStatus status;
 
   @Column(name = "created_at")

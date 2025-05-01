@@ -1,10 +1,11 @@
 package com.events.tickets.service;
 
 import com.events.customer.entity.Customer;
-import com.events.tickets.dto.TicketCreateDTO;
 import com.events.tickets.dto.TicketDTO;
 import com.events.tickets.dto.TicketUpdateDTO;
+import com.events.tickets.entity.Event;
 import com.events.tickets.entity.Ticket;
+import com.events.tickets.enums.TicketStatus;
 import com.events.tickets.mapper.TicketMapper;
 import com.events.tickets.repository.TicketRepository;
 import java.util.List;
@@ -43,27 +44,37 @@ public class TicketService {
     @Transactional(readOnly = true)
     public Optional<TicketDTO> getTicketById(Long id) {
         return ticketRepository.findById(id)
-                .map(ticketMapper::toDTO);
+            .map(ticketMapper::toDTO);
     }
 
     /**
      * Create a new ticket.
      *
-     * @param ticketCreateDTO the ticket data to create
+     * @param dto the ticket data to create
      * @return the created ticket as DTO
      */
     @Transactional
-    public TicketDTO createTicket(TicketCreateDTO ticketCreateDTO) {
-        Ticket ticket = ticketMapper.toEntity(ticketCreateDTO);
+    public TicketDTO buyTicket(TicketUpdateDTO dto) {
+        Ticket ticket = ticketMapper.toEntity(dto);
+        Customer customer = new Customer();
+        customer.setId(dto.getCustomerId());
+//        ticket.setCustomer(customer);
 
-        if (ticketCreateDTO.getCustomerId() != null) {
-            Customer customer = new Customer();
-            customer.setId(ticketCreateDTO.getCustomerId());
-            ticket.setCustomer(customer);
-        }
+        ticket.setStatus(TicketStatus.RESERVED);
 
-        Ticket savedTicket = ticketRepository.save(ticket);
-        return ticketMapper.toDTO(savedTicket);
+        return ticketMapper.toDTO(ticketRepository.save(ticket));
+    }
+
+    /**
+     * Create a new ticket with a default status.
+     *
+     * @return the created ticket
+     */
+    public Ticket create(Event event) {
+        Ticket ticket = new Ticket();
+        ticket.setEvent(event);
+        ticket.setStatus(TicketStatus.RESERVED);
+        return ticketRepository.save(ticket);
     }
 
     /**
@@ -76,16 +87,14 @@ public class TicketService {
     @Transactional
     public Optional<TicketDTO> updateTicket(Long id, TicketUpdateDTO ticketUpdateDTO) {
         return ticketRepository.findById(id)
-                .map(existingTicket -> {
-                    if (ticketUpdateDTO.getCustomerId() != null) {
-                        Customer customer = new Customer();
-                        customer.setId(ticketUpdateDTO.getCustomerId());
-                        existingTicket.setCustomer(customer);
-                    }
+            .map(existingTicket -> {
+                Customer customer = new Customer();
+                customer.setId(ticketUpdateDTO.getCustomerId());
+//                existingTicket.setCustomer(customer);
 
-                    Ticket updatedTicket = ticketMapper.updateTicketFromDTO(ticketUpdateDTO, existingTicket);
-                    return ticketMapper.toDTO(ticketRepository.save(updatedTicket));
-                });
+                Ticket updatedTicket = ticketMapper.updateTicketFromDTO(ticketUpdateDTO, existingTicket);
+                return ticketMapper.toDTO(ticketRepository.save(updatedTicket));
+            });
     }
 
     /**

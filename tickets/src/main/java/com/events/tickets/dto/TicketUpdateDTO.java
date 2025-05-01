@@ -4,6 +4,7 @@ import com.events.tickets.enums.TicketStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * DTO (Data Transfer Object) for updating an existing Ticket.
@@ -13,6 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TicketUpdateDTO {
+
+    @NotNull
     private Long customerId;
     private TicketStatus status;
 }

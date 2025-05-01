@@ -30,13 +30,6 @@ public class EventMapper {
         dto.setStatus(event.getStatus());
         dto.setCreatedAt(event.getCreatedAt());
         dto.setUpdatedAt(event.getUpdatedAt());
-        
-        if (event.getTickets() != null) {
-            dto.setTicketIds(event.getTickets().stream()
-                    .map(Ticket::getId)
-                    .collect(Collectors.toList()));
-        }
-        
         return dto;
     };
 
