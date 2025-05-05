@@ -1,13 +1,13 @@
 package com.events.tickets.service;
 
 import com.events.commons.entity.Event;
-import com.events.commons.entity.Ticket;
+import com.events.tickets.cep.ViaCepResponse;
+import com.events.tickets.cep.ViaCepService;
 import com.events.tickets.dto.EventCreateDTO;
 import com.events.tickets.dto.EventDTO;
 import com.events.tickets.dto.EventUpdateDTO;
 import com.events.tickets.mapper.EventMapper;
 import com.events.tickets.repository.EventRepository;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +24,7 @@ public class EventService {
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
     private final TicketService ticketService;
+    private final ViaCepService viaCepService;
 
     /**
      * Get all events.
@@ -56,10 +57,10 @@ public class EventService {
      */
     @Transactional
     public EventDTO createEvent(EventCreateDTO dto) {
-        List<Ticket> tickets = new ArrayList<>();
-        Event event = eventRepository.save(eventMapper.toEntity(dto));
+        ViaCepResponse address = viaCepService.getAddressByZipCode(dto.getZipCode());
+        Event event = eventRepository.save(eventMapper.toEntity(dto, address));
         for (int i = 0; i < dto.getTickets(); i++) {
-            tickets.add(ticketService.create(event, dto.getPrice()));
+            ticketService.create(event, dto.getTickerPrice());
         }
         return eventMapper.toDTO(event);
     }

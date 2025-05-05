@@ -2,7 +2,6 @@ package com.events.tickets.dto;
 
 import com.events.commons.enums.EventStatus;
 import java.time.OffsetDateTime;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +16,11 @@ import lombok.NoArgsConstructor;
 public class EventDTO {
     private Long id;
     private EventStatus status;
+    private String zipCode;
+    private String street;
+    private String neighborhood;
+    private String city;
+    private String state;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
-    private List<Long> ticketIds;
 }
