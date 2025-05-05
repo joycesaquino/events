@@ -72,7 +72,7 @@ public class CustomerController {
      * @return the created customer DTO
      */
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerCreateDTO customerCreateDTO) {
         if (customerService.existsByEmail(customerCreateDTO.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
