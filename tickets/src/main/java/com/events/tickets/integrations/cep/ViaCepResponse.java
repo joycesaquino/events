@@ -1,4 +1,4 @@
-package com.events.tickets.cep;
+package com.events.tickets.integrations.cep;
 
 import lombok.Getter;
 import lombok.Setter;

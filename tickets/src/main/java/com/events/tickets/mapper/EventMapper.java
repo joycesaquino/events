@@ -1,6 +1,6 @@
 package com.events.tickets.mapper;
 
-import com.events.tickets.cep.ViaCepResponse;
+import com.events.tickets.integrations.cep.ViaCepResponse;
 import com.events.tickets.dto.EventCreateDTO;
 import com.events.tickets.dto.EventDTO;
 import com.events.tickets.dto.EventUpdateDTO;

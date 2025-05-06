@@ -14,8 +14,11 @@ import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
-@Configuration
+/**
+ * Singleton rest template
+ */
 @Slf4j
+@Configuration
 public class RestTemplateConfig {
 
   @Bean

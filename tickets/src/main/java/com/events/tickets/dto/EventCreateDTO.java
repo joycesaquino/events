@@ -20,13 +20,11 @@ public class EventCreateDTO {
     @NotNull(message = "Status cannot be null")
     private EventStatus status;
 
-    @NotNull(message = "Number of tickets cannot be null")
-    private Long tickets;
-
-    @NotNull(message = "TicketPrice cannot be null")
-    private BigDecimal tickerPrice;
+    @NotNull
+    EventTicketCreateDTO ticket;
 
     @NotNull(message = "ZipCode cannot be null")
     @Pattern(regexp = "^\\d{5}-\\d{3}$", message = "Invalid CEP format")
     private String zipCode;
+
 }

@@ -1,6 +1,10 @@
 package com.events.tickets.repository;
 
 import com.events.commons.entity.Ticket;
+import com.events.commons.enums.TicketStatus;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.data.domain.Limit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,5 +13,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
-    // Add custom query methods if needed
+
+  List<Ticket> findTicketsByEventIdAndStatus(Long eventId, TicketStatus status, Limit limit);
 }

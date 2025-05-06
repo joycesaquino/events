@@ -1,8 +1,10 @@
 package com.events.tickets.service;
 
 import com.events.commons.entity.Event;
-import com.events.tickets.cep.ViaCepResponse;
-import com.events.tickets.cep.ViaCepService;
+import com.events.commons.entity.Ticket;
+import com.events.commons.enums.EventStatus;
+import com.events.tickets.integrations.cep.ViaCepResponse;
+import com.events.tickets.integrations.cep.ViaCepService;
 import com.events.tickets.dto.EventCreateDTO;
 import com.events.tickets.dto.EventDTO;
 import com.events.tickets.dto.EventUpdateDTO;
@@ -11,6 +13,7 @@ import com.events.tickets.repository.EventRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +22,25 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EventService {
 
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
-    private final TicketService ticketService;
     private final ViaCepService viaCepService;
+    private final TicketService ticketService;
+
+
+    public void updateEventAvailability(Long eventId) {
+        boolean hasTicketAvailability = ticketService.validateTicketAvailability(eventId);
+        log.info("Check if event {} is available {}.", eventId, hasTicketAvailability);
+        if (!hasTicketAvailability) {
+            return;
+        }
+        Event event = eventRepository.getEventById(eventId);
+        event.setStatus(EventStatus.SOLD_OUT);
+        eventRepository.save(event);
+    }
 
     /**
      * Get all events.
@@ -56,12 +72,9 @@ public class EventService {
      * @return the created event as DTO
      */
     @Transactional
-    public EventDTO createEvent(EventCreateDTO dto) {
+    public EventDTO create(EventCreateDTO dto) {
         ViaCepResponse address = viaCepService.getAddressByZipCode(dto.getZipCode());
         Event event = eventRepository.save(eventMapper.toEntity(dto, address));
-        for (int i = 0; i < dto.getTickets(); i++) {
-            ticketService.create(event, dto.getTickerPrice());
-        }
         return eventMapper.toDTO(event);
     }
 

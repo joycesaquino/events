@@ -1,17 +1,24 @@
 package com.events.tickets.service;
 
+import static com.events.commons.enums.TicketStatus.AVAILABLE;
+
 import com.events.commons.entity.Customer;
 import com.events.commons.entity.Event;
 import com.events.commons.entity.Ticket;
+import com.events.commons.enums.TicketStatus;
+import com.events.tickets.dto.EventDTO;
+import com.events.tickets.dto.EventTicketCreateDTO;
+import com.events.tickets.dto.ReserveTicketDTO;
 import com.events.tickets.dto.TicketDTO;
 import com.events.tickets.dto.TicketUpdateDTO;
-import com.events.commons.enums.TicketStatus;
 import com.events.tickets.mapper.TicketMapper;
 import com.events.tickets.repository.TicketRepository;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TicketService {
 
     private final TicketRepository ticketRepository;
@@ -60,23 +68,23 @@ public class TicketService {
         Customer customer = new Customer();
         customer.setId(dto.getCustomerId());
         ticket.setCustomer(customer);
-
         ticket.setStatus(TicketStatus.RESERVED);
-
         return ticketMapper.toDTO(ticketRepository.save(ticket));
     }
 
     /**
      * Create a new ticket with a default status.
-     *
-     * @return the created ticket
      */
-    public Ticket create(Event event, BigDecimal price) {
-        Ticket ticket = new Ticket();
-        ticket.setEvent(event);
-        ticket.setStatus(TicketStatus.AVAILABLE);
-        ticket.setPrice(price);
-        return ticketRepository.save(ticket);
+    public void create(EventDTO event, EventTicketCreateDTO dto) {
+        Event eventEntity = new Event();
+        eventEntity.setId(event.getId());
+        for (int i = 0; i < dto.getQuantity(); i++) {
+            Ticket ticket = new Ticket();
+            ticket.setEvent(eventEntity);
+            ticket.setStatus(AVAILABLE);
+            ticket.setPrice(dto.getPrice());
+            ticketRepository.save(ticket);
+        }
     }
 
     /**
@@ -96,6 +104,34 @@ public class TicketService {
                 Ticket updatedTicket = ticketMapper.updateTicketFromDTO(ticketUpdateDTO, existingTicket);
                 return ticketMapper.toDTO(ticketRepository.save(updatedTicket));
             });
+    }
+
+    public List<TicketDTO> reserveTickets(ReserveTicketDTO dto) {
+        List<Ticket> tickets = ticketRepository.findTicketsByEventIdAndStatus(
+            dto.getEventId(), AVAILABLE,
+            Limit.of(dto.getTicketsQuantity()));
+
+      if (tickets.isEmpty()) {
+        throw new IllegalArgumentException("No available tickets for the event");
+      }
+
+        // Should get and validate customer
+        Customer customer = new Customer();
+        customer.setId(dto.getCustomerId());
+
+        return tickets.stream().map(ticket -> {
+            ticket.setStatus(TicketStatus.SOLD);
+            ticket.setCustomer(customer);
+            return ticketMapper.toDTO(ticketRepository.save(ticket));
+        }).collect(Collectors.toList());
+    }
+
+    public boolean validateTicketAvailability(Long eventId) {
+        List<Ticket> tickets = ticketRepository.findTicketsByEventIdAndStatus(
+            eventId, AVAILABLE,
+            Limit.of(1));
+        log.info("Check if event {} has available tickets: {}", eventId, tickets.toString());
+        return tickets.isEmpty();
     }
 
     /**
