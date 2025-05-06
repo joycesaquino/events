@@ -31,6 +31,21 @@ public class Event {
   @Enumerated(EnumType.STRING)
   private EventStatus status;
 
+  @Column(name = "zip_code")
+  private String zipCode;
+
+  @Column(name = "street")
+  private String street;
+
+  @Column(name = "neighborhood")
+  private String neighborhood;
+
+  @Column(name = "city")
+  private String city;
+
+  @Column(name = "state")
+  private String state;
+  
   @Column(name = "created_at")
   private OffsetDateTime createdAt;
 

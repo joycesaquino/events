@@ -92,8 +92,7 @@ public class TicketService {
             .map(existingTicket -> {
                 Customer customer = new Customer();
                 customer.setId(ticketUpdateDTO.getCustomerId());
-//                existingTicket.setCustomer(customer);
-
+                existingTicket.setCustomer(customer);
                 Ticket updatedTicket = ticketMapper.updateTicketFromDTO(ticketUpdateDTO, existingTicket);
                 return ticketMapper.toDTO(ticketRepository.save(updatedTicket));
             });

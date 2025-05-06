@@ -1,10 +1,10 @@
 # Events Monorepo
 
-This project is a monorepo containing three microservices:
+This project is a monorepo containing two microservices:
 
 1. **Customer Service** - Manages customer data
 2. **Tickets Service** - Manages ticket data
-3. **Orchestrator Worker** - Coordinates workflows between services
+3. **Commons Module** - Share context into modules
 
 ## Project Structure
 
@@ -12,7 +12,7 @@ This project is a monorepo containing three microservices:
 events/
 ├── customer/             # Customer service module
 ├── tickets/              # Tickets service module
-├── orchestrator/         # Orchestrator worker module
+├── commons/              # Shared resources module
 ├── docker-compose.yml    # Docker Compose configuration
 ├── Makefile              # Build and run commands
 └── README.md             # This file

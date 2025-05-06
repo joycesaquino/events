@@ -1,8 +1,8 @@
 package com.events.tickets.dto;
 
 import com.events.commons.enums.EventStatus;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,12 +17,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class EventCreateDTO {
 
-    @NotNull
+    @NotNull(message = "Status cannot be null")
     private EventStatus status;
 
-    @NotNull
+    @NotNull(message = "Number of tickets cannot be null")
     private Long tickets;
 
-    @NotNull
-    private BigDecimal price;
+    @NotNull(message = "TicketPrice cannot be null")
+    private BigDecimal tickerPrice;
+
+    @NotNull(message = "ZipCode cannot be null")
+    @Pattern(regexp = "^\\d{5}-\\d{3}$", message = "Invalid CEP format")
+    private String zipCode;
 }
