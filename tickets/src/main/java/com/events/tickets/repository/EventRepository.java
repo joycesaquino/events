@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
-    // Add custom query methods if needed
+  Event getEventById(Long id);
 }

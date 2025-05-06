@@ -1,7 +1,10 @@
 package com.events.tickets.controller;
 
+import com.events.tickets.dto.ReserveTicketDTO;
 import com.events.tickets.dto.TicketDTO;
 import com.events.tickets.dto.TicketUpdateDTO;
+import com.events.tickets.facade.TicketFacade;
+import com.events.tickets.mapper.TicketMapper;
 import com.events.tickets.service.TicketService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +28,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class TicketController {
 
     private final TicketService ticketService;
+    private final TicketFacade ticketFacade;
+
+    /**
+     * Buy a ticket FACADE.
+     *
+     * @param reserveTicketDTO the ticket data with customer information
+     * @return the purchased ticket DTO
+     */
+    @PostMapping("/buy")
+    public ResponseEntity<List<TicketDTO>> buyTicket(@RequestBody ReserveTicketDTO reserveTicketDTO)
+    {
+        ticketFacade.createTicket(reserveTicketDTO);
+        return ResponseEntity.noContent().build();
+    }
 
     /**
      * Get all tickets.
@@ -47,18 +64,6 @@ public class TicketController {
         return ticketService.getTicketById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
-    }
-
-    /**
-     * Buy a ticket.
-     *
-     * @param ticketUpdateDTO the ticket data with customer information
-     * @return the purchased ticket DTO
-     */
-    @PostMapping("/buy")
-    public ResponseEntity<TicketDTO> buyTicket(@RequestBody TicketUpdateDTO ticketUpdateDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ticketService.buyTicket(ticketUpdateDTO));
     }
 
     /**

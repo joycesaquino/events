@@ -3,6 +3,7 @@ package com.events.tickets.controller;
 import com.events.tickets.dto.EventCreateDTO;
 import com.events.tickets.dto.EventDTO;
 import com.events.tickets.dto.EventUpdateDTO;
+import com.events.tickets.facade.EventFacade;
 import com.events.tickets.service.EventService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -27,6 +28,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class EventController {
 
     private final EventService eventService;
+    private final EventFacade eventFacade;
+
+    /**
+     * Create a new event.
+     *
+     * @param eventCreateDTO the event data to create
+     * @return the created event DTO
+     */
+    @PostMapping
+    public ResponseEntity<EventDTO> createEvent(@RequestBody @Valid EventCreateDTO eventCreateDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(eventFacade.createEvent(eventCreateDTO));
+    }
 
     /**
      * Get all events.
@@ -49,18 +63,6 @@ public class EventController {
         return eventService.getEventById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
-    }
-
-    /**
-     * Create a new event.
-     *
-     * @param eventCreateDTO the event data to create
-     * @return the created event DTO
-     */
-    @PostMapping
-    public ResponseEntity<EventDTO> createEvent(@RequestBody @Valid EventCreateDTO eventCreateDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(eventService.createEvent(eventCreateDTO));
     }
 
     /**
